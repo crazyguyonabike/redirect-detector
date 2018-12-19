@@ -1,0 +1,4 @@
+db.url=jdbc:mysql://localhost:3306/{{ database_name }}
+db.user={{ db_user }}
+db.password={{ db_password }}
+timeout.seconds={{ connection_timeout_seconds }}
