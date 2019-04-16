@@ -35,7 +35,7 @@ CREATE TABLE `domain_entry` (
   `http_status` int(11) DEFAULT NULL,
   `https_status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `domain` (`domain`,`category`),
+  UNIQUE KEY `domain` (`domain`,`category`)
 ) ENGINE=InnoDB
 ```
 
