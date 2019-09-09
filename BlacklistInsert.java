@@ -47,7 +47,7 @@ public class BlacklistInsert {
             try (Connection con = DriverManager.getConnection(properties.getProperty("jdbc.url"), properties.getProperty("db.user"), properties.getProperty("db.password"));) {
                 try (PreparedStatement ps = con.prepareStatement("INSERT INTO domain_entry (`domain`, `category`) VALUES (?, ?)")) {
                     for (Path p : paths) {
-                        String category = p.subpath(1, 2).toString();
+                        String category = p.subpath(2, 3).toString();
                         Files.lines(p).forEach(s -> {
                                 try {
                                     ps.setString(1, s);
