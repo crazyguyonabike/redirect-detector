@@ -47,7 +47,6 @@ public class BlacklistService implements InitializingBean {
         
         this.httpClient = HttpClientBuilder.create()
             .disableAutomaticRetries()
-            //.disableRedirectHandling()
             .disableConnectionState()
             .setDefaultRequestConfig(requestConfig)
             .disableCookieManagement()
@@ -95,7 +94,6 @@ public class BlacklistService implements InitializingBean {
             domainEntry.setHttpsRedirect(queryResult.getRedirect());
         }
         domainEntry.setHttpsLastTime(LocalDateTime.now());
-        
         return domainEntry;
     }
 
@@ -109,13 +107,12 @@ public class BlacklistService implements InitializingBean {
             int statusCode = statusLine.getStatusCode();
             queryResult.setResultCode(statusCode);
             
-
             URI initialURI = httpGet.getURI();
             URI finalURI = null;
             List<URI> locations = context.getRedirectLocations();
             if (locations != null)
                 finalURI = locations.get(locations.size()-1);
-            if (!initialURI.equals(finalURI))
+            if (finalURI != null && !initialURI.equals(finalURI))
                 queryResult.setRedirect(finalURI.getHost());
         } catch (Exception e) {
             queryResult.setResultCode(e.getClass().hashCode());
