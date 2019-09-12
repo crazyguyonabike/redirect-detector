@@ -109,7 +109,6 @@ public class BlacklistService implements InitializingBean {
             int statusCode = statusLine.getStatusCode();
             queryResult.setResultCode(statusCode);
             
-            EntityUtils.consumeQuietly(response.getEntity());
 
             URI initialURI = httpGet.getURI();
             URI finalURI = null;
