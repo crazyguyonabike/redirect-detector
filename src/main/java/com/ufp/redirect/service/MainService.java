@@ -32,17 +32,18 @@ public class MainService {
     private ThreadPoolTaskExecutor executor;
 
     public Long run() {
-        long count = 0, totalCount = 0;
+        int count = 0;
+        long totalCount = 0;
 
         do {
             Iterable<DomainEntry> domainEntries = getDomainEntryList();
-            count = StreamSupport.stream(domainEntries.spliterator(), false).
-                map(domainEntry -> CompletableFuture.supplyAsync(() -> blacklistService.getRedirects(domainEntry), executor).thenAccept(extendedDomainEntryRepository::save)).
-                map(CompletableFuture::join).
-                count();
+            List<CompletableFuture<DomainEntry>> futures = StreamSupport.stream(domainEntries.spliterator(), false).
+                map(domainEntry -> CompletableFuture.supplyAsync(() -> blacklistService.getRedirects(domainEntry), executor).thenApply(extendedDomainEntryRepository::save)).
+                collect(Collectors.toList());
+            count = futures.size();
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[count])).join();
             totalCount += count;
         } while (count == 250);
-
         return totalCount;
     }
 
